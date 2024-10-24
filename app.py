@@ -4,16 +4,20 @@ app.py
 import streamlit as st
 import asyncio
 from openai import AsyncOpenAI
+import weave
+
+weave.init('junk-stuff')
+
 
 try:
   client = AsyncOpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 except:
   client = AsyncOpenAI()
 
-st.set_page_config(
-    page_title="OpenAI Async Stream Demo",
-    layout="wide",
-)
+# st.set_page_config(
+#     page_title="OpenAI Async Stream Demo",
+#     layout="wide",
+# )
 
 st.title("Demo: Async streaming of OpenAI output")
 with st.sidebar:
@@ -27,6 +31,7 @@ col1, col2 = st.columns(2)
 essay_1 = col1.empty()
 essay_2 = col2.empty()
 
+@weave.op
 async def generate_essay(placeholder, topic, word_count):
     stream = await client.chat.completions.create(
         model="gpt-3.5-turbo",
